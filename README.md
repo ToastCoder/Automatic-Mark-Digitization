@@ -1,3 +1,3 @@
-# Automatic-Mark-Digitization-System
+# Automatic-Mark-Digitization
 
 (Under development)
