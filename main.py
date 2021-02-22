@@ -8,6 +8,6 @@
 
 # DONE BY: VIGNESHWAR RAVICHANDAR
 
-# TOPICS: Deep Learning, TensorFlow, Convolutional Neural Networks, Binary Classification
+# TOPICS: Deep Learning, TensorFlow, Convolutional Neural Networks, Multiclass Classification
 
 #-------------------------------------------------------------------------------------------------------------------------------
