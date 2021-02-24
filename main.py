@@ -49,3 +49,21 @@ def parse():
     args = parser.parse_args()
     return args
 
+# MAIN FUNCTION
+if __name__ == "__main__":
+
+    # DISABLING TENSORFLOW DEBUGGING INFORMATION
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+    print("TensorFlow Debugging Information is hidden.")
+    
+    args = parse()
+
+    if (args.install_requirements):
+        os.system('sudo apt install python3-pip')
+        os.system('pip3 install -r requirements.txt')
+
+    if (args.train):
+        os.system('python3 src/train.py')
+
+    if (args.test):
+        os.system('python3 src/test.py')
