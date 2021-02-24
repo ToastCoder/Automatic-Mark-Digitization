@@ -27,3 +27,25 @@ def strBool(v):
     else:
         raise argparse.ArgumentTypeError('Expected a Boolean Value.')
 
+# FUNCTION FOR PARSING
+def parse():
+    parser = argparse.ArgumentParser(description = 'Command Line Interface for Automatic Mark Digitization.')
+
+    parser.add_argument('-tr','--train', 
+                        type = strBool, 
+                        help = 'Argument taken for training model.', 
+                        default = "False")
+
+    parser.add_argument('-req','--install_requirements', 
+                        type = strBool, 
+                        help = 'Argument taken for installing requirements', 
+                        default = False)
+
+    parser.add_argument('-t','--test', 
+                        type = strBool, 
+                        help = 'Argument for testing with custom input',
+                        required = True)
+
+    args = parser.parse_args()
+    return args
+
