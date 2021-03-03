@@ -19,4 +19,6 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 # DATA SEGMENTATION
-data = pd.read_csv('data/train.csv')
+data_train = pd.read_csv('data/train.csv')
+data_test = pd.read_csv('data/test.csv')
+
