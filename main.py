@@ -1,65 +1,69 @@
-# IMPORTING THE ESSENTIAL LIBRARIES
-import cv2
-import pytesseract
-import matplotlib.pyplot as plt
-from PIL import Image
+#-------------------------------------------------------------------------------------------------------------------------------
 
-# GETTING THE INPUT IMAGE AND PREVIEWING IT
-raw = cv2.imread('data/raw_image.jpg',3)
-raw = cv2.cvtColor(raw,cv2.COLOR_BGR2RGB)
-plt.imshow(raw)
-plt.title("Input Image")
-plt.show()
+# AUTOMATIC MARK DIGITIZATION
 
-# CROPPING THE MARK WORDS FROM THE IMAGE
-y1=1836
-x1=2000
-h1=240
-w1=600
-crop_mark = raw[y1:y1+h1, x1:x1+w1]
-crop_mark = cv2.cvtColor(crop_mark,cv2.COLOR_BGR2RGB)
-plt.imshow(crop_mark)
-plt.title("Image of marks field")
-plt.show()
+# GETS THE IMAGE FROM THE USER AND EXTRACTS THE RESPECTIVE ROLL.NO AND THEIR MARK AND UPDATES IT IN A .CSV FILE.
 
-# CROPPING THE REG.NO FROM THE IMAGE
-x2 = 1935
-y2 = 835
-w2 = 953
-h2 = 100
-crop_roll_no = raw[y2:y2+h2, x2:x2+w2]
-plt.imshow(crop_roll_no)
-plt.title("Image of Reg.No field")
-plt.show()
+# FILE NAME: MAIN.PY
 
-# CONVERTING MARK IMAGE INTO GRAYSCALE
-gray_mark = cv2.cvtColor(crop_mark,cv2.COLOR_BGR2GRAY)
-gray_mark = cv2.cvtColor(gray_mark,cv2.COLOR_BGR2RGB)
-plt.imshow(gray_mark)
-plt.title("Mark Image in Grayscale")
-plt.show()
+# DONE BY: VIGNESHWAR RAVICHANDAR
 
-# CONVERTING REG.NO IMAGE INTO GRAYSCALE
-gray_roll_no = cv2.cvtColor(crop_roll_no,cv2.COLOR_BGR2GRAY)
-gray_roll_no = cv2.cvtColor(gray_roll_no,cv2.COLOR_BGR2RGB)
-plt.imshow(gray_roll_no)
-plt.title("Reg.No Image into Grayscale")
-plt.show()
+# TOPICS: Deep Learning, TensorFlow, Convolutional Neural Networks, Multiclass Classification
 
-# BINARIZATION OF MARK IMAGE
-t , binary_mark = cv2.threshold(gray_mark,160,255,cv2.THRESH_BINARY)
-binary_mark = cv2.cvtColor(binary_mark,cv2.COLOR_BGR2RGB)
-plt.imshow(binary_mark)
-plt.title("Binarization of Mark Image")
-plt.show()
+#-------------------------------------------------------------------------------------------------------------------------------
 
-# BINARIZATION OF REG.NO IMAGE
-t2 , binary_roll_no = cv2.threshold(gray_roll_no,160,255,cv2.THRESH_BINARY)
-binary_roll_no = cv2.cvtColor(binary_roll_no,cv2.COLOR_BGR2RGB)
-plt.imshow(binary_roll_no)
-plt.title("Binarization of Reg.no Image")
-plt.show()
+# IMPORTING REQUIRED LIBRARIES
+import os
+import argparse
 
-# CONVERTING IMAGE INTO STRING AND PRINTING IT
-print(pytesseract.image_to_string(binary_mark))
-print(pytesseract.image_to_string(binary_roll_no))
+# FUNCTION TO CONVERT STR INPUT TO BOOL
+def strBool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Expected a Boolean Value.')
+
+# FUNCTION FOR PARSING
+def parse():
+    parser = argparse.ArgumentParser(description = 'Command Line Interface for Automatic Mark Digitization.')
+
+    parser.add_argument('-tr','--train', 
+                        type = strBool, 
+                        help = 'Argument taken for training model.', 
+                        default = "False")
+
+    parser.add_argument('-req','--install_requirements', 
+                        type = strBool, 
+                        help = 'Argument taken for installing requirements', 
+                        default = False)
+
+    parser.add_argument('-t','--test', 
+                        type = strBool, 
+                        help = 'Argument for testing with custom input',
+                        required = True)
+
+    args = parser.parse_args()
+    return args
+
+# MAIN FUNCTION
+if __name__ == "__main__":
+
+    # DISABLING TENSORFLOW DEBUGGING INFORMATION
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+    print("TensorFlow Debugging Information is hidden.")
+    
+    args = parse()
+
+    if (args.install_requirements):
+        os.system('sudo apt install python3-pip')
+        os.system('pip3 install -r requirements.txt')
+
+    if (args.train):
+        os.system('python3 src/train.py')
+
+    if (args.test):
+        os.system('python3 src/test.py')
