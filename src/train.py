@@ -36,9 +36,13 @@ x_train = data_train.drop('label',axis = 1)
 y_test = data_test['label']
 x_test = data_test.drop('label',axis = 1)
 
+x_train_norm = tf.keras.utils.normalize(x_train, axis = 1)
+x_test_norm = tf.keras.utils.normalize(x_test, axis = 1)
+
 # NEURAL NETWORK
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten())
 model.add(tf.keras.layers.Dense(512,activation = 'relu'))
 model.add(tf.keras.layers.Dense(128,activation = 'relu'))
 model.add(tf.keras.layers.Dense(10,activation = 'softmax'))
+
