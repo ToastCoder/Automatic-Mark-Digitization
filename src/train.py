@@ -22,3 +22,4 @@ import tensorflow as tf
 data_train = pd.read_csv('data/train.csv')
 data_test = pd.read_csv('data/test.csv')
 
+
