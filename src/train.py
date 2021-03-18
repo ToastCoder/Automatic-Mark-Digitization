@@ -50,10 +50,14 @@ def digit_model():
     model.add(tf.keras.layers.Dense(10,activation = 'softmax'))
     return model
 
-model = digit_model()
+# INITITIALIZING THE CALLBACK
 early_stopping = tf.keras.callbacks.EarlyStopping(monitor = 'accuracy', mode = 'max')
 
+# FITTING AND TRAINING THE MODEL
+model = digit_model()
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
 model.fit(x_train_norm, y_train, epochs = 30,callbacks = early_stopping, batch_size = 5)
+model.summary()
+
 
 
