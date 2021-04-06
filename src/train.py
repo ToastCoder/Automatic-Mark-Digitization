@@ -59,5 +59,25 @@ model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['
 model.fit(x_train_norm, y_train, epochs = 30,callbacks = early_stopping, batch_size = 5)
 model.summary()
 
+# PLOTTING THE GRAPH FOR TRAIN-LOSS AND VALIDATION-LOSS
+plt.figure(0)
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Loss Graph')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train Loss', 'Validation Loss'], loc='upper left')
+plt.show()
+plt.savefig('graphs/loss_graph.png')
 
+# PLOTTING THE GRAPH FOR TRAIN-ACCURACY AND VALIDATION-ACCURACY
+plt.figure(1)
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Accuracy Graph')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train Accuracy', 'Validation Accuracy'], loc='upper left')
+plt.show()
+plt.savefig('graphs/acc_graph.png')
 
