@@ -56,7 +56,7 @@ early_stopping = tf.keras.callbacks.EarlyStopping(monitor = 'accuracy', mode = '
 # FITTING AND TRAINING THE MODEL
 model = digit_model()
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-model.fit(x_train_norm, y_train, epochs = 30,callbacks = early_stopping, batch_size = 5)
+history = model.fit(x_train_norm, y_train, epochs = 30,callbacks = early_stopping, batch_size = 5)
 model.summary()
 
 # PLOTTING THE GRAPH FOR TRAIN-LOSS AND VALIDATION-LOSS
@@ -80,4 +80,5 @@ plt.xlabel('Epoch')
 plt.legend(['Train Accuracy', 'Validation Accuracy'], loc='upper left')
 plt.show()
 plt.savefig('graphs/acc_graph.png')
+
 
