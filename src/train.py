@@ -18,32 +18,27 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
+from sklearn.model_selection import train_test_split
 
 plt.style.use('ggplot')
 
 print(f"TensorFlow Version: {tf.__version__}")
 
-TRAIN_DATASET_DIR = 'data/train.csv'
-TEST_DATASET_DIR = 'data/test.csv'
-MODEL_PATH = 'model/digit_model'
-
-# DATA PREPROCESSING
-data_train = pd.read_csv(TRAIN_DATASET_DIR)
-
-print("Dataset Description:\n",data_train.describe())
-print("Dataset Head:\n",data_train.head())
-
-y_train = data_train['label']
-x_train = data_train.drop('label',axis = 1)
-x_test = pd.read_csv(TEST_DATASET_DIR)
-
-# NORMALIZATION OF X AXIS
-x_train_norm = tf.keras.utils.normalize(x_train, axis = 1)
-x_test_norm = tf.keras.utils.normalize(x_test, axis = 1)
+datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale = 1./255.)
+data = datagen.flow_from_directory('data/trainingSet',color_mode = 'grayscale',batch_size = 10)
+data_train, data_test = train_test_split(data,test_size = 0.1,random_state = 0)
 
 # FUNCTION FOR NEURAL NETWORK
 def digit_model():
     model = tf.keras.models.Sequential()
+    model.add(tf.keras.layers.Conv2D(filters = 32, kernel_size = (5,5),padding = 'Same',activation = 'relu',input_shape = (28,28,1)))
+    model.add(tf.keras.layers.Conv2D(filters = 32, kernel_size = (5,5),padding = 'Same',activation = 'relu'))
+    model.add(tf.keras.layers.Dropout(0.25))
+
+    model.add(tf.keras.layers.Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same',activation = 'relu'))
+    model.add(tf.keras.layers.Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same',activation = 'relu'))
+    model.add(tf.keras.layers.Dropout(0.25))
+
     model.add(tf.keras.layers.Flatten())
     model.add(tf.keras.layers.Dense(512,activation = 'relu'))
     model.add(tf.keras.layers.Dense(128,activation = 'relu'))
@@ -56,7 +51,7 @@ early_stopping = tf.keras.callbacks.EarlyStopping(monitor = 'accuracy', mode = '
 # FITTING AND TRAINING THE MODEL
 model = digit_model()
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-history = model.fit(x_train_norm, y_train, validation_split = 0.1, epochs = 30,callbacks = early_stopping, batch_size = 5)
+history = model.fit(data_train,  validation_data = data_test, epochs = 30,callbacks = early_stopping, batch_size = 10)
 model.summary()
 
 # PLOTTING THE GRAPH FOR TRAIN-LOSS AND VALIDATION-LOSS
