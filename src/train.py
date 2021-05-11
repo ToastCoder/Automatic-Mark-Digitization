@@ -20,17 +20,16 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
-plt.style.use('ggplot')
-
 print(f"TensorFlow Version: {tf.__version__}")
+MODEL_PATH = './model/digit_model'
 
 data = tf.keras.datasets.mnist
 
 (x_train, y_train), (x_test, y_test) = data.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0
 y_train, y_test = y_train.flatten(), y_test.flatten()
-print("x_train.shape:", x_train.shape)
-print("y_train.shape", y_train.shape)
+print("Shape of x_train:", x_train.shape)
+print("Shape of y_train:", y_train.shape)
 
 
 # FUNCTION FOR NEURAL NETWORK
@@ -73,4 +72,11 @@ plt.legend(['Train Accuracy', 'Validation Accuracy'], loc='upper left')
 plt.show()
 plt.savefig('graphs/acc_graph.png')
 
+# CALCULATING THE ACCURACY
+score = model.evaluate(x_test, y_test)
+print(f"Model Accuracy: {round(score[1]*100,4)}")
+
+# SAVING THE MODEL
+tf.keras.models.save_model(model,MODEL_PATH)
+print(f"Successfully stored the trained model at {MODEL_PATH}")
 
