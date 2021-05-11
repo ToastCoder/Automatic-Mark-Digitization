@@ -24,24 +24,21 @@ plt.style.use('ggplot')
 
 print(f"TensorFlow Version: {tf.__version__}")
 
-datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale = 1./255.)
-data = datagen.flow_from_directory('data/trainingSet',color_mode = 'grayscale',batch_size = 10)
-data_train, data_test = train_test_split(data,test_size = 0.1,random_state = 0)
+data = tf.keras.datasets.mnist
+
+(x_train, y_train), (x_test, y_test) = data.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+y_train, y_test = y_train.flatten(), y_test.flatten()
+print("x_train.shape:", x_train.shape)
+print("y_train.shape", y_train.shape)
+
 
 # FUNCTION FOR NEURAL NETWORK
 def digit_model():
     model = tf.keras.models.Sequential()
-    model.add(tf.keras.layers.Conv2D(filters = 32, kernel_size = (5,5),padding = 'Same',activation = 'relu',input_shape = (28,28,1)))
-    model.add(tf.keras.layers.Conv2D(filters = 32, kernel_size = (5,5),padding = 'Same',activation = 'relu'))
-    model.add(tf.keras.layers.Dropout(0.25))
-
-    model.add(tf.keras.layers.Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same',activation = 'relu'))
-    model.add(tf.keras.layers.Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same',activation = 'relu'))
-    model.add(tf.keras.layers.Dropout(0.25))
-
     model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(512,activation = 'relu'))
-    model.add(tf.keras.layers.Dense(128,activation = 'relu'))
+    model.add(tf.keras.layers.Dense(32,activation = 'relu'))
+    model.add(tf.keras.layers.Dense(32,activation = 'relu'))
     model.add(tf.keras.layers.Dense(10,activation = 'softmax'))
     return model
 
@@ -51,7 +48,7 @@ early_stopping = tf.keras.callbacks.EarlyStopping(monitor = 'accuracy', mode = '
 # FITTING AND TRAINING THE MODEL
 model = digit_model()
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-history = model.fit(data_train,  validation_data = data_test, epochs = 30,callbacks = early_stopping, batch_size = 10)
+history = model.fit(x_train,y_train, validation_data = (x_test,y_test), epochs = 30,callbacks = early_stopping, batch_size = 10)
 model.summary()
 
 # PLOTTING THE GRAPH FOR TRAIN-LOSS AND VALIDATION-LOSS
