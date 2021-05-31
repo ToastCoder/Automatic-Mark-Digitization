@@ -42,12 +42,12 @@ def digit_model():
     return model
 
 # INITITIALIZING THE CALLBACK
-early_stopping = tf.keras.callbacks.EarlyStopping(monitor = 'accuracy', mode = 'max')
+#early_stopping = tf.keras.callbacks.EarlyStopping(monitor = 'accuracy', mode = 'max')
 
 # FITTING AND TRAINING THE MODEL
 model = digit_model()
 model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-history = model.fit(x_train,y_train, validation_data = (x_test,y_test), epochs = 30,callbacks = early_stopping, batch_size = 10)
+history = model.fit(x_train,y_train, validation_data = (x_test,y_test), epochs = 5, batch_size = 5)
 model.summary()
 
 # PLOTTING THE GRAPH FOR TRAIN-LOSS AND VALIDATION-LOSS
